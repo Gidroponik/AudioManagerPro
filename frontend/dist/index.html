@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AudioManagerPro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- SVG icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/><path d="M8.5 21h7"/>
+    </symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18.2 6.3a8 8 0 0 1 0 11.4"/>
+    </symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c5 0 8.6 4.2 9.6 6.4a1.4 1.4 0 0 1 0 1.2 13 13 0 0 1-2.4 3.3"/><path d="M6.6 6.6A13.4 13.4 0 0 0 2.4 11.4a1.4 1.4 0 0 0 0 1.2C3.4 14.8 7 19 12 19a10 10 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="m3 3 18 18"/>
+    </symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2.4 11.4C3.4 9.2 7 5 12 5s8.6 4.2 9.6 6.4a1.4 1.4 0 0 1 0 1.2C20.6 14.8 17 19 12 19s-8.6-4.2-9.6-6.4a1.4 1.4 0 0 1 0-1.2Z"/><circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.6a2 2 0 0 1-1 1.7l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.7v-.6a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2Z"/><circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v8.5"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11"/><path d="m7.5 10 4.5 4.5 4.5-4.5"/><path d="M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></symbol>
+    <symbol id="i-min" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 4.5 5.6v5.6c0 4.7 3.2 8.6 7.5 10 4.3-1.4 7.5-5.3 7.5-10V5.6Z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
+    <symbol id="i-restore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/></symbol>
+  </svg>
+
+  <div id="shell">
+    <div class="card" id="card">
+      <header class="bar">
+        <div class="drag" title="Перетащить">
+          <svg class="ico dots"><use href="#i-dots"/></svg>
+        </div>
+        <div class="brand drag-area">
+          <img src="img/logo-mark.png" alt="" class="brand-logo">
+          <div class="brand-text">
+            <span class="brand-name">AudioManager<b>Pro</b></span>
+            <span class="brand-msg" id="brandMsg"></span>
+          </div>
+        </div>
+        <div class="sep"></div>
+        <button class="ib" data-panel="input" title="Микрофон по умолчанию">
+          <svg class="ico"><use href="#i-mic"/></svg><span class="pin" id="pin-input"></span>
+        </button>
+        <button class="ib" data-panel="output" title="Вывод звука по умолчанию">
+          <svg class="ico"><use href="#i-speaker"/></svg><span class="pin" id="pin-output"></span>
+        </button>
+        <button class="ib" data-panel="hide" title="Скрыть устройства">
+          <svg class="ico"><use href="#i-eye-off"/></svg>
+        </button>
+        <div class="sep"></div>
+        <button class="ib" data-panel="settings" title="Настройки">
+          <svg class="ico"><use href="#i-gear"/></svg>
+        </button>
+        <button class="ib" id="btnMin" title="Свернуть в трей">
+          <svg class="ico"><use href="#i-min"/></svg>
+        </button>
+        <button class="ib ib-close" id="btnClose" title="Выход">
+          <svg class="ico"><use href="#i-close"/></svg>
+        </button>
+      </header>
+      <main class="panel" id="panel"></main>
+      <div class="toast" id="toast"></div>
+      <div class="modal" id="modal" aria-hidden="true">
+        <div class="dialog" id="dialog" role="alertdialog" aria-labelledby="dlgTitle" aria-describedby="dlgText"></div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+name: Release
+
+# Publishes a GitHub release with AudioManagerPro.exe (+ .sha256) that the
+# in-app updater picks up. Trigger by pushing a tag (git tag v1.0.1 && git push
+# origin v1.0.1) or run it manually from the Actions tab with a version.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version without the leading v, e.g. 1.0.1 (X.Y.Z)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            v="${{ github.event.inputs.version }}"
+          else
+            v="${GITHUB_REF_NAME}"
+          fi
+          v="${v#v}"
+          if ! [[ "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version: $v" >&2; exit 1
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.11.0
+
+      - name: Test
+        run: go test .
+
+      - name: Build
+        shell: bash
+        run: |
+          v="${{ steps.ver.outputs.version }}"
+          # Stamp the version into the exe metadata as well.
+          sed -i "s/\"productVersion\": \"[^\"]*\"/\"productVersion\": \"$v\"/" wails.json
+          wails build -clean -trimpath -ldflags "-s -w -X main.version=$v"
+
+      - name: Checksum
+        shell: pwsh
+        run: |
+          $h = (Get-FileHash build/bin/AudioManagerPro.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  AudioManagerPro.exe" | Out-File -Encoding ascii -NoNewline build/bin/AudioManagerPro.exe.sha256
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: AudioManagerPro ${{ steps.ver.outputs.version }}
+          generate_release_notes: true
+          files: |
+            build/bin/AudioManagerPro.exe
+            build/bin/AudioManagerPro.exe.sha256

@@ -1,0 +1,8 @@
+build/bin/
+frontend/wailsjs/
+.idea/
+*.exe
+*.exe.old
+*.exe.new
+tz.txt
+example.jpg

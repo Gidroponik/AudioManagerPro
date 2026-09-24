@@ -1,0 +1,19 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "AudioManagerPro",
+  "outputfilename": "AudioManagerPro",
+  "frontend:dir": "frontend",
+  "frontend:install": "",
+  "frontend:build": "",
+  "wailsjsdir": "",
+  "author": {
+    "name": "AudioManagerPro"
+  },
+  "info": {
+    "companyName": "AudioManagerPro",
+    "productName": "AudioManagerPro",
+    "productVersion": "1.0.0",
+    "copyright": "© 2026 AudioManagerPro",
+    "comments": "Audio device manager for Windows"
+  }
+}
