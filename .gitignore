@@ -6,3 +6,4 @@ frontend/wailsjs/
 *.exe.new
 tz.txt
 example.jpg
+/app_flow.gif
