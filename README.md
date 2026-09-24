@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/Gidroponik/AudioManagerPro/releases/latest"><img src="https://img.shields.io/github/v/release/Gidroponik/AudioManagerPro?style=flat-square&label=%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F&color=3b82f6" alt="Последняя версия"></a>
-  <a href="https://github.com/Gidroponik/AudioManagerPro/releases"><img src="https://img.shields.io/github/downloads/Gidroponik/AudioManagerPro/total?style=flat-square&cacheSeconds=3600&label=%D1%81%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9&color=3b82f6" alt="Скачивания"></a>
+  <a href="https://github.com/Gidroponik/AudioManagerPro/releases"><img src="https://img.shields.io/github/downloads/Gidroponik/AudioManagerPro/total?style=flat-square&cacheSeconds=600&label=%D1%81%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9&color=3b82f6" alt="Скачивания"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3b82f6?style=flat-square" alt="Windows 10 | 11">
 </p>
 
