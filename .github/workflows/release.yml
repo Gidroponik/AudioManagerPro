@@ -60,12 +60,21 @@ jobs:
           $h = (Get-FileHash build/bin/AudioManagerPro.exe -Algorithm SHA256).Hash.ToLower()
           "$h  AudioManagerPro.exe" | Out-File -Encoding ascii -NoNewline build/bin/AudioManagerPro.exe.sha256
 
+      - name: Release notes
+        shell: bash
+        run: |
+          # The "## <version>" section of CHANGELOG.md becomes the release text.
+          v="${{ steps.ver.outputs.version }}"
+          awk -v v="$v" '{sub(/\r$/, "")} /^## /{p = ($2 == v); next} p' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then echo "Обновление $v" > notes.md; fi
+          cat notes.md
+
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.ver.outputs.version }}
           name: AudioManagerPro ${{ steps.ver.outputs.version }}
-          generate_release_notes: true
+          body_path: notes.md
           files: |
             build/bin/AudioManagerPro.exe
             build/bin/AudioManagerPro.exe.sha256

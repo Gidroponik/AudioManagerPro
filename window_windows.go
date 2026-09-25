@@ -33,7 +33,7 @@ var (
 
 const (
 	dwmwaWindowCornerPreference = 33
-	dwmwcpRound                 = 2
+	dwmwcpDoNotRound            = 1
 	swpNoZOrder                 = 0x0004
 	swpNoActivate               = 0x0010
 	monitorDefNearest           = 0x2
@@ -115,10 +115,10 @@ func (n *nativeWindow) setRect(r rect) {
 		uintptr(r.w()), uintptr(r.h()), swpNoZOrder|swpNoActivate)
 }
 
-// roundCorners asks DWM (Windows 11+) for native rounded corners; a no-op on
-// older systems.
-func (n *nativeWindow) roundCorners() {
-	pref := uint32(dwmwcpRound)
+// disableDwmCorners stops Windows 11 from clipping the window to its own
+// small rounding; the card's corners are drawn by CSS instead.
+func (n *nativeWindow) disableDwmCorners() {
+	pref := uint32(dwmwcpDoNotRound)
 	procDwmSetWindowAttribute.Call(uintptr(n.handle()), dwmwaWindowCornerPreference, uintptr(unsafe.Pointer(&pref)), 4)
 }
 

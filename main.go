@@ -17,6 +17,10 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+// instanceID guards against a second copy; test builds override it via
+// -ldflags "-X main.instanceID=..." to run next to an installed copy.
+var instanceID = "c4f1f0b2-6a7e-4d0e-9b8e-audiomanagerpro"
+
 func main() {
 	afterUpdate(os.Args[1:])
 
@@ -40,13 +44,18 @@ func main() {
 		OnShutdown:       app.shutdown,
 		Bind:             []interface{}{app},
 		SingleInstanceLock: &options.SingleInstanceLock{
-			UniqueId:               "c4f1f0b2-6a7e-4d0e-9b8e-audiomanagerpro",
+			UniqueId:               instanceID,
 			OnSecondInstanceLaunch: func(options.SecondInstanceData) { app.show() },
 		},
 		Windows: &windows.Options{
-			// Keep frameless decorations: Windows 11 then draws the native
-			// rounded corners and drop shadow around the bar.
-			Theme: windows.Dark,
+			// A fully transparent window: the rounded card, its border and
+			// shadow are drawn by CSS, so corners can be any radius and stay
+			// anti-aliased (DWM only offers a fixed small rounding).
+			WebviewIsTransparent:              true,
+			WindowIsTranslucent:               true,
+			BackdropType:                      windows.None,
+			DisableFramelessWindowDecorations: true,
+			Theme:                             windows.Dark,
 		},
 	})
 	if err != nil {

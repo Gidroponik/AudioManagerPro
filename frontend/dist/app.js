@@ -56,9 +56,29 @@ async function call(fn, ...args) {
 
 // ---------------------------------------------------------------- panels
 
-// Window heights in CSS px (the width is fixed at 560 in app.go).
-const PANEL_H = 640;
-const DIALOG_H = 300;
+// Window heights in CSS px, including the transparent margin (width is fixed in app.go).
+const MAX_PANEL_H = 720; // taller panels scroll
+const DIALOG_H = 320;
+
+// fittedHeight is the window height that shows the open panel's content
+// without empty space below it.
+function fittedHeight() {
+  const view = panel.querySelector('.view');
+  if (!view) return MAX_PANEL_H;
+  const px = (el, prop) => parseFloat(getComputedStyle(el)[prop]) || 0;
+  const h = px(shell, 'paddingTop') + px(shell, 'paddingBottom')
+    + px(card, 'borderTopWidth') + px(card, 'borderBottomWidth')
+    + $('.bar').offsetHeight
+    + px(panel, 'borderTopWidth') + px(panel, 'paddingTop') + px(panel, 'paddingBottom')
+    + view.offsetHeight;
+  return Math.min(MAX_PANEL_H, Math.ceil(h));
+}
+
+// fitWindow resizes the expanded window when the content height changed.
+function fitWindow() {
+  const h = fittedHeight();
+  return Math.abs(h - window.innerHeight) > 2 ? api().Expand(h) : Promise.resolve();
+}
 
 function fadeOutPanel(ms) {
   const a = panel.animate(
@@ -83,7 +103,7 @@ async function openPanel(name) {
     if (first) {
       panel.innerHTML = html;
       // Let the content start rising while the window is still growing.
-      const grow = api().Expand(PANEL_H);
+      const grow = api().Expand(fittedHeight());
       setTimeout(() => card.classList.add('open'), 110);
       await grow;
     } else {
@@ -93,8 +113,10 @@ async function openPanel(name) {
       panel.innerHTML = html;
       panel.scrollTop = 0;
       panel.getAnimations().forEach((a) => a.cancel());
+      const resize = fitWindow();
       void panel.offsetWidth; // restart the entrance animation
       card.classList.add('open');
+      await resize;
     }
     bindView(name);
   } catch (e) {
@@ -152,6 +174,7 @@ async function refresh(force = false) {
   panel.querySelector('.view')?.classList.add('static');
   panel.scrollTop = scroll;
   bindView(name);
+  if (!modal.open) await fitWindow();
 }
 
 // ---------------------------------------------------------------- input / output
@@ -619,6 +642,7 @@ function init() {
   window.runtime.EventsOn('notice', (msg) => { notify(msg); refresh(); });
   window.runtime.EventsOn('update-available', onUpdateAvailable);
   window.runtime.EventsOn('update-progress', onUpdateProgress);
+  window.runtime.EventsOn('debug-open', (name) => (name === 'close' ? confirmClose() : openPanel(name)));
   api().GetSettings().then((v) => { updates.current = v.version; }).catch(() => {});
 
   setInterval(() => { if (!document.hidden) refresh(); }, 2000);

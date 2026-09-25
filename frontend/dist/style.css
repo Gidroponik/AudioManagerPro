@@ -14,8 +14,9 @@
   --danger: #ef4444;
   --ok: #22c55e;
   --warn: #f59e0b;
-  --radius: 18px;
-  --bar-h: 64px; /* = barH in app.go */
+  --radius: 22px;
+  --bar-h: 64px;
+  --pad: 10px; /* transparent margin for the shadow; barH in app.go = bar + 2 × pad */
   --ease: cubic-bezier(.22, 1, .36, 1);      /* easeOutQuint: soft landing */
   --ease-io: cubic-bezier(.65, 0, .35, 1);   /* easeInOutCubic */
   color-scheme: dark;
@@ -25,7 +26,7 @@
 
 html, body {
   height: 100%;
-  background: var(--bg);
+  background: transparent;
   overflow: hidden;
   font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
   font-size: 13px;
@@ -42,6 +43,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 #shell {
   height: 100%;
+  padding: var(--pad);
   opacity: 0;
   transform: scale(.985);
   transition: opacity .3s var(--ease), transform .45s var(--ease);
@@ -54,6 +56,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   display: flex;
   flex-direction: column;
   background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: var(--radius);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, .45);
   overflow: hidden;
 }
 

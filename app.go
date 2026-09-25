@@ -13,10 +13,11 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// Window geometry in CSS pixels; must match frontend/dist/style.css.
+// Window geometry in CSS pixels, including the transparent margin around the
+// card (--pad in frontend/dist/style.css): a 64px bar plus 10px on each side.
 const (
-	winW = 560
-	barH = 64
+	winW = 580
+	barH = 84
 )
 
 type App struct {
@@ -52,7 +53,7 @@ func (a *App) startup(ctx context.Context) {
 // autostart with "start minimized" enabled.
 func (a *App) domReady(ctx context.Context) {
 	cfg := a.store.Get()
-	a.win.roundCorners()
+	a.win.disableDwmCorners()
 	r := a.win.centeredRect(winW, barH)
 	a.win.setRect(r)
 	a.barRect = r
@@ -63,7 +64,13 @@ func (a *App) domReady(ctx context.Context) {
 	if !(a.autostart && cfg.Settings.StartMinimized) {
 		a.show()
 	}
+	if debugHook != nil {
+		debugHook(a)
+	}
 }
+
+// debugHook is set only in debug builds (debug_windows.go).
+var debugHook func(*App)
 
 func (a *App) shutdown(ctx context.Context) {
 	quitTray()
